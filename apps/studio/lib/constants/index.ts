@@ -4,6 +4,8 @@ export * from './infrastructure'
 
 export const IS_PLATFORM = process.env.NEXT_PUBLIC_IS_PLATFORM === 'true'
 export const DEFAULT_HOME = IS_PLATFORM ? '/projects' : '/project/default'
+
+// TODO: Replace PG_META_URL with STUDIO_PG_META_URL and remove all references to PLATFORM_PG_META_URL
 export const API_URL = IS_PLATFORM ? process.env.NEXT_PUBLIC_API_URL! : '/api'
 export const PG_META_URL = IS_PLATFORM
   ? process.env.PLATFORM_PG_META_URL
@@ -28,8 +30,6 @@ export const STRIPE_PUBLIC_KEY =
 export const USAGE_APPROACHING_THRESHOLD = 0.75
 
 export const LOCAL_STORAGE_KEYS = {
-  RECENTLY_VISITED_ORGANIZATION: 'supabase-organization',
-
   AI_ASSISTANT_STATE: 'supabase-ai-assistant-state',
 
   UI_PREVIEW_NAVIGATION_LAYOUT: 'supabase-ui-preview-nav-layout',
@@ -48,6 +48,10 @@ export const LOCAL_STORAGE_KEYS = {
   SQL_EDITOR_AI_SCHEMA: (ref: string) => `supabase_sql-editor-ai-schema-enabled-${ref}`,
   SQL_EDITOR_AI_OPEN: 'supabase_sql-editor-ai-open',
   SQL_EDITOR_LAST_SELECTED_DB: (ref: string) => `sql-editor-last-selected-db-${ref}`,
+  SQL_EDITOR_SQL_BLOCK_ACKNOWLEDGED: (ref: string) => `sql-editor-sql-block-acknowledged-${ref}`,
+  SQL_EDITOR_SECTION_STATE: (ref: string) => `sql-editor-section-state-${ref}`,
+  SQL_EDITOR_SORT: (ref: string) => `sql-editor-sort-${ref}`,
+
   LOG_EXPLORER_SPLIT_SIZE: 'supabase_log-explorer-split-size',
   GRAPHIQL_RLS_BYPASS_WARNING: 'graphiql-rls-bypass-warning-dismissed',
   CLS_DIFF_WARNING: 'cls-diff-warning-dismissed',
@@ -71,9 +75,12 @@ export const LOCAL_STORAGE_KEYS = {
   EXPAND_NAVIGATION_PANEL: 'supabase-expand-navigation-panel',
   GITHUB_AUTHORIZATION_STATE: 'supabase-github-authorization-state',
   // Notice banner keys
-  AUTH_SMTP_CHANGES_WARNING: 'auth-smtp-changes-warning-dismissed',
+  FLY_POSTGRES_DEPRECATION_WARNING: 'fly-postgres-deprecation-warning-dismissed',
 
   AUTH_USERS_COLUMNS_CONFIGURATION: (ref: string) => `supabase-auth-users-columns-${ref}`,
+
+  // api keys view switcher for new and legacy api keys
+  API_KEYS_VIEW: (ref: string) => `supabase-api-keys-view-${ref}`,
 }
 
 export const OPT_IN_TAGS = {
