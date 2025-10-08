@@ -1,21 +1,22 @@
-import React, { Dispatch, SetStateAction } from 'react'
+'use client'
+
+import { AnimatePresence, LazyMotion, domAnimation, m } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { m, AnimatePresence, LazyMotion, domAnimation } from 'framer-motion'
+import { useEffect } from 'react'
+import type { Dispatch, SetStateAction } from 'react'
 
-import { DEFAULT_EASE } from '~/lib/animations'
 import { Accordion, Button, TextLink } from 'ui'
+import { DEFAULT_EASE } from '~/lib/animations'
 import MenuItem from './MenuItem'
 
+import { useIsLoggedIn, useIsUserLoading } from 'common'
 import * as supabaseLogoWordmarkDark from 'common/assets/images/supabase-logo-wordmark--dark.png'
 import * as supabaseLogoWordmarkLight from 'common/assets/images/supabase-logo-wordmark--light.png'
-import { useKey } from 'react-use'
-import { useIsLoggedIn, useIsUserLoading } from 'common'
 import { ChevronRight } from 'lucide-react'
 import ProductModulesData from '~/data/ProductModules'
-import { jobsCount } from '~/.contentlayer/generated/staticContent/_index.json' with { type: 'json' }
+import staticContent from '.generated/staticContent/_index.json'
 
-import { TelemetryActions } from 'common/telemetry-constants'
 import { useSendTelemetryEvent } from '~/lib/telemetry'
 
 interface Props {
@@ -28,6 +29,8 @@ const MobileMenu = ({ open, setOpen, menu }: Props) => {
   const isLoggedIn = useIsLoggedIn()
   const isUserLoading = useIsUserLoading()
   const sendTelemetryEvent = useSendTelemetryEvent()
+  const { jobsCount } = staticContent
+
   const container = {
     hidden: { opacity: 0 },
     show: { opacity: 1, transition: { duration: 0.15, staggerChildren: 0.05, ease: DEFAULT_EASE } },
@@ -40,7 +43,15 @@ const MobileMenu = ({ open, setOpen, menu }: Props) => {
     exit: { opacity: 0, transition: { duration: 0.05 } },
   }
 
-  useKey('Escape', () => setOpen(false))
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setOpen(false)
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [setOpen])
 
   const AccordionMenuItem = ({ menuItem }: any) => (
     <>
@@ -96,11 +107,11 @@ const MobileMenu = ({ open, setOpen, menu }: Props) => {
           </Link>
         </>
       ) : menuItem.title === 'Developers' ? (
-        <div className="px-3 mb-2 flex flex-col gap-2">
+        <div className="px-3 mb-2 flex flex-col gap-6">
           {menuItem.subMenu['navigation'].map((column: any) => (
             <div key={column.label} className="flex flex-col gap-3">
               {column.label !== 'Developers' && (
-                <label className="text-foreground-lighter text-xs uppercase tracking-widest font-mono mt-4">
+                <label className="text-foreground-lighter text-xs uppercase tracking-widest font-mono">
                   {column.label}
                 </label>
               )}
@@ -134,6 +145,27 @@ const MobileMenu = ({ open, setOpen, menu }: Props) => {
               className="focus-visible:ring-offset-4 focus-visible:ring-offset-background-overlay"
             />
           </div>
+        </div>
+      ) : menuItem.title === 'Solutions' ? (
+        <div className="px-3 mb-2 flex flex-col gap-6">
+          {menuItem.subMenu['navigation'].map((column: any) => (
+            <div key={column.label} className="flex flex-col gap-3">
+              {column.label !== 'Solutions' && (
+                <label className="text-foreground-lighter text-xs uppercase tracking-widest font-mono">
+                  {column.label}
+                </label>
+              )}
+              {column.links.map((link: any) => (
+                <TextLink
+                  hasChevron={false}
+                  key={link.text}
+                  url={link.url}
+                  label={link.text}
+                  className="focus-visible:ring-offset-4 focus-visible:ring-offset-background-overlay !mt-0"
+                />
+              ))}
+            </div>
+          ))}
         </div>
       ) : null}
     </>
@@ -250,7 +282,7 @@ const MobileMenu = ({ open, setOpen, menu }: Props) => {
                         legacyBehavior
                         onClick={() =>
                           sendTelemetryEvent({
-                            action: TelemetryActions.SIGN_IN_BUTTON_CLICKED,
+                            action: 'sign_in_button_clicked',
                             properties: { buttonLocation: 'Mobile Nav' },
                           })
                         }
@@ -267,7 +299,7 @@ const MobileMenu = ({ open, setOpen, menu }: Props) => {
                         legacyBehavior
                         onClick={() =>
                           sendTelemetryEvent({
-                            action: TelemetryActions.START_PROJECT_BUTTON_CLICKED,
+                            action: 'start_project_button_clicked',
                             properties: { buttonLocation: 'Mobile Nav' },
                           })
                         }

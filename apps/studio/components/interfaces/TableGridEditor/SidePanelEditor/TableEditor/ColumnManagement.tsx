@@ -10,11 +10,11 @@ import {
 } from 'react-beautiful-dnd'
 
 import { useParams } from 'common'
-import { TelemetryActions } from 'common/telemetry-constants'
 import InformationBox from 'components/ui/InformationBox'
 import type { EnumeratedType } from 'data/enumerated-types/enumerated-types-query'
 import { useSendEventMutation } from 'data/telemetry/send-event-mutation'
-import { useSelectedOrganization } from 'hooks/misc/useSelectedOrganization'
+import { useSelectedOrganizationQuery } from 'hooks/misc/useSelectedOrganization'
+import { DOCS_URL } from 'lib/constants'
 import {
   AlertDescription_Shadcn_,
   AlertTitle_Shadcn_,
@@ -59,7 +59,7 @@ const ColumnManagement = ({
   onUpdateFkRelations,
 }: ColumnManagementProps) => {
   const { ref: projectRef } = useParams()
-  const org = useSelectedOrganization()
+  const { data: org } = useSelectedOrganizationQuery()
 
   const [open, setOpen] = useState(false)
   const [selectedColumn, setSelectedColumn] = useState<ColumnField>()
@@ -145,7 +145,7 @@ const ColumnManagement = ({
           <div className="flex items-center gap-x-2">
             <Button asChild type="default" icon={<ExternalLink size={12} strokeWidth={2} />}>
               <a
-                href="https://supabase.com/docs/guides/database/tables#data-types"
+                href={`${DOCS_URL}/guides/database/tables#data-types`}
                 target="_blank"
                 rel="noreferrer"
               >
@@ -170,7 +170,7 @@ const ColumnManagement = ({
                     onClick={() => {
                       onSelectImportData()
                       sendEvent({
-                        action: TelemetryActions.IMPORT_DATA_BUTTON_CLICKED,
+                        action: 'import_data_button_clicked',
                         properties: { tableType: 'New Table' },
                         groups: {
                           project: projectRef ?? 'Unknown',

@@ -6,7 +6,6 @@ import {
 } from '@heroicons/react/solid'
 import dayjs from 'dayjs'
 import matter from 'gray-matter'
-import capitalize from 'lodash/capitalize'
 import { ChevronLeft, X as XIcon } from 'lucide-react'
 import { MDXRemote } from 'next-mdx-remote'
 import { NextSeo } from 'next-seo'
@@ -14,8 +13,7 @@ import NextImage from 'next/image'
 import Link from 'next/link'
 
 import authors from 'lib/authors.json'
-import { TelemetryActions } from 'common/telemetry-constants'
-import { isNotNullOrUndefined } from '~/lib/helpers'
+import { capitalize, isNotNullOrUndefined } from '~/lib/helpers'
 import mdxComponents from '~/lib/mdx/mdxComponents'
 import { mdxSerialize } from '~/lib/mdx/mdxSerialize'
 import { getAllPostSlugs, getPostdata } from '~/lib/posts'
@@ -287,7 +285,7 @@ const EventPage = ({ event }: InferGetStaticPropsType<typeof getStaticProps>) =>
                       target={event.main_cta?.target ? event.main_cta?.target : undefined}
                       onClick={() =>
                         sendTelemetryEvent({
-                          action: TelemetryActions.EVENT_PAGE_CTA_CLICKED,
+                          action: 'www_pricing_plan_cta_clicked',
                           properties: { eventTitle: event.title },
                         })
                       }

@@ -1,51 +1,56 @@
 import { PermissionAction } from '@supabase/shared-types/out/constants'
 
-import { AdvancedAuthSettingsForm, SmtpForm, ThirdPartyAuthForm } from 'components/interfaces/Auth'
+import { useParams } from 'common'
+import { AdvancedAuthSettingsForm } from 'components/interfaces/Auth/AdvancedAuthSettingsForm'
 import AuthLayout from 'components/layouts/AuthLayout/AuthLayout'
 import DefaultLayout from 'components/layouts/DefaultLayout'
-import {
-  ScaffoldContainer,
-  ScaffoldDescription,
-  ScaffoldHeader,
-  ScaffoldTitle,
-} from 'components/layouts/Scaffold'
+import { PageLayout } from 'components/layouts/PageLayout/PageLayout'
+import { ScaffoldContainer, ScaffoldSection } from 'components/layouts/Scaffold'
 import NoPermission from 'components/ui/NoPermission'
 import { GenericSkeletonLoader } from 'components/ui/ShimmeringLoader'
-import { useCheckPermissions, usePermissionsLoaded } from 'hooks/misc/useCheckPermissions'
+import { UnknownInterface } from 'components/ui/UnknownInterface'
+import { useAsyncCheckPermissions } from 'hooks/misc/useCheckPermissions'
+import { useIsFeatureEnabled } from 'hooks/misc/useIsFeatureEnabled'
 import type { NextPageWithLayout } from 'types'
 
-const PageLayout: NextPageWithLayout = () => {
-  const isPermissionsLoaded = usePermissionsLoaded()
-  // TODO: check if these permissions cover third party auth as well
-  const canReadAuthSettings = useCheckPermissions(PermissionAction.READ, 'custom_config_gotrue')
+const AdvancedPage: NextPageWithLayout = () => {
+  const { ref } = useParams()
+  const showAdvanced = useIsFeatureEnabled('authentication:advanced')
+
+  const { can: canReadAuthSettings, isSuccess: isPermissionsLoaded } = useAsyncCheckPermissions(
+    PermissionAction.READ,
+    'custom_config_gotrue'
+  )
+
+  if (!showAdvanced) {
+    return <UnknownInterface urlBack={`/project/${ref}/auth/users`} />
+  }
+
+  if (isPermissionsLoaded && !canReadAuthSettings) {
+    return <NoPermission isFullPage resourceText="access your project's authentication settings" />
+  }
 
   return (
-    <>
-      <ScaffoldContainer>
-        <ScaffoldHeader>
-          <ScaffoldTitle>Advanced</ScaffoldTitle>
-        </ScaffoldHeader>
-      </ScaffoldContainer>
-      <ScaffoldContainer className="flex flex-col gap-10" bottomPadding>
-        {!isPermissionsLoaded ? (
+    <ScaffoldContainer>
+      {!isPermissionsLoaded ? (
+        <ScaffoldSection isFullWidth>
           <GenericSkeletonLoader />
-        ) : !canReadAuthSettings ? (
-          <NoPermission isFullPage resourceText="access your project's authentication settings" />
-        ) : (
-          <>
-            <AdvancedAuthSettingsForm />
-          </>
-        )}
-      </ScaffoldContainer>
-    </>
+        </ScaffoldSection>
+      ) : (
+        <AdvancedAuthSettingsForm />
+      )}
+    </ScaffoldContainer>
   )
 }
 
-PageLayout.getLayout = (page) => {
-  return (
-    <DefaultLayout>
-      <AuthLayout>{page}</AuthLayout>
-    </DefaultLayout>
-  )
-}
-export default PageLayout
+AdvancedPage.getLayout = (page) => (
+  <DefaultLayout>
+    <AuthLayout>
+      <PageLayout title="Advanced" subtitle="Configure advanced authentication server settings">
+        {page}
+      </PageLayout>
+    </AuthLayout>
+  </DefaultLayout>
+)
+
+export default AdvancedPage

@@ -468,6 +468,12 @@ export const examples: Registry = [
     files: ['example/dropdown-menu-radio-group.tsx'],
   },
   {
+    name: 'filter-bar-demo',
+    type: 'components:example',
+    registryDependencies: ['filter-bar'],
+    files: ['example/filter-bar-demo.tsx'],
+  },
+  {
     name: 'hover-card-demo',
     type: 'components:example',
     registryDependencies: ['hover-card'],
@@ -568,6 +574,24 @@ export const examples: Registry = [
     type: 'components:example',
     registryDependencies: ['navigation-menu'],
     files: ['example/navigation-menu-responsive.tsx'],
+  },
+  {
+    name: 'nav-menu-demo',
+    type: 'components:example',
+    registryDependencies: ['nav-menu'],
+    files: ['example/nav-menu-demo.tsx'],
+  },
+  {
+    name: 'nav-menu-badges',
+    type: 'components:example',
+    registryDependencies: ['nav-menu'],
+    files: ['example/nav-menu-badges.tsx'],
+  },
+  {
+    name: 'nav-menu-icons',
+    type: 'components:example',
+    registryDependencies: ['nav-menu'],
+    files: ['example/nav-menu-icons.tsx'],
   },
   // {
   //   name: 'pagination-demo',
@@ -1065,6 +1089,16 @@ export const examples: Registry = [
     name: 'inner-side-menu-with-search',
     type: 'components:example',
     files: ['example/inner-side-menu-with-search.tsx'],
+  },
+  {
+    name: 'toc-demo',
+    type: 'components:example',
+    files: ['example/toc-demo.tsx'],
+  },
+  {
+    name: 'toc-single-demo',
+    type: 'components:example',
+    files: ['example/toc-single-demo.tsx'],
   },
   {
     name: 'multi-select-demo',

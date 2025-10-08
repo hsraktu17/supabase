@@ -2,7 +2,6 @@ import Link from 'next/link'
 
 import { Button } from 'ui'
 import SectionContainer from '~/components/Layouts/SectionContainer'
-import { TelemetryActions } from 'common/telemetry-constants'
 import { useSendTelemetryEvent } from '~/lib/telemetry'
 
 const Hero = () => {
@@ -21,7 +20,7 @@ const Hero = () => {
                     <span className="text-brand block md:ml-0">Scale to millions</span>
                   </h1>
                   <p className="pt-2 text-foreground my-3 text-sm sm:mt-5 lg:mb-0 sm:text-base lg:text-lg">
-                    Supabase is an open source Firebase alternative.{' '}
+                    Supabase is the Postgres development platform.{' '}
                     <br className="hidden md:block" />
                     Start your project with a Postgres database, Authentication, instant APIs, Edge
                     Functions, Realtime subscriptions, Storage, and Vector embeddings.
@@ -34,7 +33,7 @@ const Hero = () => {
                       as="https://supabase.com/dashboard"
                       onClick={() =>
                         sendTelemetryEvent({
-                          action: TelemetryActions.START_PROJECT_BUTTON_CLICKED,
+                          action: 'start_project_button_clicked',
                           properties: { buttonLocation: 'Homepage Hero' },
                         })
                       }
@@ -48,7 +47,7 @@ const Hero = () => {
                       as="/contact/sales"
                       onClick={() =>
                         sendTelemetryEvent({
-                          action: TelemetryActions.REQUEST_DEMO_BUTTON_CLICKED,
+                          action: 'request_demo_button_clicked',
                           properties: { buttonLocation: 'Homepage Hero' },
                         })
                       }
